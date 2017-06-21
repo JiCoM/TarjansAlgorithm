@@ -29,7 +29,7 @@ window.onload = function() {
      * Run algorithm
      */
     var scc = tarjansAlgorithm.run();
-    var neigh = new NeighboursFinder(input, scc);
+    var neigh = new NeighboursFinder(scc);
     var sccHighestNeighboursNumber = neigh.getHighestNeighbourNumber();
     logGraphsStrongConnectedComponents();
     /**
