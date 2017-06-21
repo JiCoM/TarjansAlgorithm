@@ -29,6 +29,8 @@ window.onload = function() {
      * Run algorithm
      */
     var scc = tarjansAlgorithm.run();
+    var neigh = new NeighboursFinder(input, scc);
+    var sccHighestNeighboursNumber = neigh.getHighestNeighbourNumber();
     logGraphsStrongConnectedComponents();
     /**
      * Append input results to HTML structure
@@ -38,6 +40,7 @@ window.onload = function() {
     function appendResults (result) {
         var inputSelector = document.querySelector('.data_input_insert');
         var outputSelector = document.querySelector('.data_output_insert');
+        var sccHn = document.querySelector('.data_scc_hn');
         var lengthNode = document.createElement('p');
         var newInputNode;
 
@@ -55,6 +58,7 @@ window.onload = function() {
             inputSelector.insertBefore(lengthNode, inputSelector.firstChild);
         }
 
+        sccHn.innerHTML = '{ ' + sccHighestNeighboursNumber.component[0].name + ' }';
         outputSelector.innerHTML = outputSelector.innerHTML + '{ ' + result + ' }' + '\n';
     }
     /**
@@ -112,10 +116,6 @@ window.onload = function() {
             appendResults(result);
         }
     }
-
-    var neigh = new NeighboursFinder(input, scc);
-    neigh.getNeighbours();
-
 };
 /**
  * Constructor function of new Graph
@@ -265,25 +265,58 @@ function TarjansAlgorithm(graph) {
         }
     }
 }
+/**
+ * find scc with highest number of neighbours sccs
+ * @param sConnectedComponents
+ * @constructor
+ */
+function NeighboursFinder (sConnectedComponents) {
+    var stack = {};
+    var currentStackIndex = 0;
 
-//Todo - find scc with highest number of neighbours sccs
-function NeighboursFinder (input, sConnectedComponents) {
-    var neighbours = {};
+    this.checkAllSCComponents = function (components, currentStackComponent, index, currentNeighbours) {
+        for (var j = 0; j < components.length; j++) {
+            for (var k = 0; k < components[j].length; k++) {
+                for (var z = 0; z < currentStackComponent[index].connectedIndexes.length; z++) {
+                    if (currentStackComponent[index].connectedIndexes[z] == components[j][k].name &&
+                        currentStackComponent[0].name !== components[j][0].name) {
+                        stack['element' + currentStackIndex].neighbours = currentNeighbours + 1;
+                    }
+                }
+            }
+        }
+    }
 
     this.getNeighbours = function () {
-        sConnectedComponents.forEach(function (el, i) {
-            el.forEach(function (elem, index) {
-                elem.connectedIndexes.forEach(function (element) {
-                    el = el[i] || el[0]
-                    if (el.name == element) {
-                        console.log(elem, ' ', el)
-                    }
-                })
-            })
-        });
-    };
-    this.getHighestNeighbourNumber = function () {
+        while (currentStackIndex < sConnectedComponents.length) {
+            if (sConnectedComponents.length > 0 && currentStackIndex <= sConnectedComponents.length) {
+                stack['element' + currentStackIndex] = {};
+                stack['element' + currentStackIndex].component = sConnectedComponents[currentStackIndex];
+                // stack['element' + currentStackIndex].neighbours = 0;
+                var currentNeighbours = 0;
 
+
+                for (var i = 0; i < stack['element' + currentStackIndex].component.length; i++) {
+                    this.checkAllSCComponents(sConnectedComponents, stack['element' + currentStackIndex].component, i, currentNeighbours);
+                }
+
+                currentStackIndex++;
+            }
+        }
+
+       return stack;
+    };
+
+    this.getHighestNeighbourNumber = function () {
+        var stack = this.getNeighbours();
+        var highestNeighboursNumber = null;
+
+        for (var key in stack) {
+            if (stack[key].neighbours > 0 && (!highestNeighboursNumber || highestNeighboursNumber.neighbours < stack[key].neighbours)) {
+                highestNeighboursNumber = stack[key];
+            }
+        }
+        return highestNeighboursNumber;
     };
 }
 
