@@ -365,50 +365,6 @@ function NeighboursFinder (sConnectedComponents) {
         return stack;
     }
 
-    // this.checkAllSCComponents = function (components, currentStackComponent, index, currentNeighbours) {
-    //     for (var j = 0; j < components.length; j++) {
-    //         for (var k = 0; k < components[j].length; k++) {
-    //             for (var z = 0; z < currentStackComponent[index].connectedIndexes.length; z++) {
-    //                 if (currentStackComponent[index].connectedIndexes[z] == components[j][k].name &&
-    //                     currentStackComponent[0].name !== components[j][0].name) {
-    //                     stack['element' + currentStackIndex].neighbours = currentNeighbours + 1;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    //
-    // this.getNeighbours = function () {
-    //     while (currentStackIndex < sConnectedComponents.length) {
-    //         if (sConnectedComponents.length > 0 && currentStackIndex <= sConnectedComponents.length) {
-    //             stack['element' + currentStackIndex] = {};
-    //             stack['element' + currentStackIndex].component = sConnectedComponents[currentStackIndex];
-    //             // stack['element' + currentStackIndex].neighbours = 0;
-    //             var currentNeighbours = 0;
-    //
-    //
-    //             for (var i = 0; i < stack['element' + currentStackIndex].component.length; i++) {
-    //                 this.checkAllSCComponents(sConnectedComponents, stack['element' + currentStackIndex].component, i, currentNeighbours);
-    //             }
-    //
-    //             currentStackIndex++;
-    //         }
-    //     }
-    //
-    //    return stack;
-    // };
-    //
-    // this.getHighestNeighbourNumber = function () {
-    //     var stack = this.getNeighbours();
-    //     var highestNeighboursNumber = null;
-    //
-    //     for (var key in stack) {
-    //         if (stack[key].neighbours > 0 && (!highestNeighboursNumber || highestNeighboursNumber.neighbours < stack[key].neighbours)) {
-    //             highestNeighboursNumber = stack[key];
-    //         }
-    //     }
-    //     return highestNeighboursNumber;
-    // };
     this.getHighestNeighbourNumber = function (sConnectedComponents) {
         return this.summarizeConnections();
     };
